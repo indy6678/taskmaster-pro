@@ -193,7 +193,51 @@ $(".card .list-group").sortable({
     console.log("out", event.target);
   },
   update: function(event) {
-    console.log("update", this);
+
+    // array to store the task data in
+    var tempArr = [];
+
+    // loop over current set of children in sortable list
+    $(this).children().each(function() {
+      var text = $(this)
+        .find("p")
+        .text()
+        .trim();
+      var date = $(this)
+        .find("span")
+        .text()
+        .trim();
+
+      // add task data to the temp array as an object
+      tempArr.push({
+        text: text,
+        date: date
+      });
+    });
+
+    // trim down list's ID to match object property
+    var arrName = $(this)
+      .attr("id")
+      .replace("list-","");
+
+      // update array on tasks object and save
+      tasks[arrName] = tempArr;
+      saveTasks();
+  }
+});
+
+$("#trash").droppable({
+  accept: ".card .list-group-item", // dictates which draggable elements are accepted by the droppable
+  tolerance: "touch", // specifies which mode to use for testing whether a draggable is hovering over a droppable  
+  drop: function(event, ui) {
+    console.log("drop");
+    ui.draggable.remove();
+  },
+  over: function(evetn, ui) {
+    console.log("over");
+  },
+  out: function(event,ui) {
+    console.log("out");
   }
 });
 
